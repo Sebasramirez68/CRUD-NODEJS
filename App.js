@@ -7,15 +7,13 @@ const ejs = require('ejs');
 const app = express();
 const port = 3000;
 
-// database connection 
 const db = require("./dbconnection");
 
 const categoryRoutes = require("./routes/category");
 const productRoutes = require("./routes/product");
 
-// configure middleware
-app.set('views', __dirname + '/views'); // set express to look in this folder to render our view
-app.set('view engine', 'ejs'); // configure template engine
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); // parse form data client
 const publicDirectory = path.join(__dirname, './public');
@@ -24,11 +22,9 @@ app.use(express.static(path.join(__dirname, 'public', 'dashboard', 'img')));
 app.use(express.static(path.join(__dirname, 'public', 'dashboard', 'lib')));
 app.use(express.static(publicDirectory));
 
-// Routes for categories and products
 app.use("/category", categoryRoutes);
 app.use("/product", productRoutes);
 
-// Home route
 app.get('/', (req, res) => {
     const sql = "SELECT * FROM product INNER JOIN category WHERE product.category = category.idc";
     db.query(sql, (err, rows) => {
@@ -39,8 +35,6 @@ app.get('/', (req, res) => {
         });
     });
 });
-
-// Start the server
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
